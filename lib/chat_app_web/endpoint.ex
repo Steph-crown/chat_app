@@ -13,7 +13,7 @@ defmodule ChatAppWeb.Endpoint do
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
-  socket "/socket", ChatAppWeb.UserSocket,
+  socket "/user_socket", ChatAppWeb.UserSocket,
     websocket: true,
     longpoll: false
 
