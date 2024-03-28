@@ -3,3 +3,9 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+@layer components {
+  .btn {
+    @apply text-sm text-white flex items-center gap-x-2 py-2 px-4 rounded bg-[#41A080] font-semibold hover:opacity-90;
+  }
+}
