@@ -1,16 +1,16 @@
-import NoRoomsView from "./components/NoRoomsView";
 import React from "react";
+import RoomLayout from "./components/RoomLayout";
 import mount from "./mount";
 
 type CustomHooks = {
-  NoRoomsView: {};
+  RoomLayout: {};
 };
 
 const Hooks = {} as CustomHooks;
 
-Hooks.NoRoomsView = {
+Hooks.RoomLayout = {
   mounted() {
-    this.unmount = mount(this.el.id, <NoRoomsView />);
+    this.unmount = mount(this.el.id, <RoomLayout />);
   },
 
   destroyed() {
