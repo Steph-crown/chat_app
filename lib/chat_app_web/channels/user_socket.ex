@@ -10,7 +10,7 @@ defmodule ChatAppWeb.UserSocket do
   # Uncomment the following line to define a "room:*" topic
   # pointing to the `ChatAppWeb.RoomChannel`:
   #
-  # channel "room:*", ChatAppWeb.RoomChannel
+  channel "room", ChatAppWeb.RoomChannel
   #
   # To create a channel file, use the mix task:
   #
@@ -18,7 +18,6 @@ defmodule ChatAppWeb.UserSocket do
   #
   # See the [`Channels guide`](https://hexdocs.pm/phoenix/channels.html)
   # for further details.
-
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -36,7 +35,7 @@ defmodule ChatAppWeb.UserSocket do
   # performing token verification on connect.
   @impl true
   def connect(_params, socket, _connect_info) do
-    {:ok, socket}
+    {:ok, socket |> assign(:rooms, [])}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

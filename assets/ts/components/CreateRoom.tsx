@@ -1,5 +1,7 @@
 import React, { FC, useState } from "react";
 
+import roomChannel from "../channels/room_channel";
+
 type Props = {
   close: () => void;
 };
@@ -11,9 +13,22 @@ const CreateRoom: FC<Props> = ({ close }) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Handle form submission
-    alert(`${roomName} created successfully!`);
-    close();
+    roomChannel
+      .push("create_room", {
+        name: roomName,
+        description: roomDescription,
+      })
+      .receive("ok", (response) => {
+        console.log(response);
+        alert(`${response?.name} room created`);
+        close();
+      })
+      .receive("error", (error) => {
+        console.log(error);
+      })
+      .receive("timeout", () => {
+        console.log("timed out");
+      });
   };
 
   const handleRoomNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
