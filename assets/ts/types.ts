@@ -1,6 +1,6 @@
 type RoomType = {
   name: string;
-  id: string;
+  id: number;
   description: string;
 };
 

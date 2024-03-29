@@ -1,19 +1,10 @@
-import React, { useState } from "react";
+import React, { FC } from "react";
 
-import CreateRoom from "./CreateRoom";
-import Modal from "./Modal";
+type Props = {
+  openCreateRoomModal: () => void;
+};
 
-const NoRoomsView = () => {
-  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
-
-  const openCreateRoomModal = () => {
-    setIsCreateRoomModalOpen(true);
-  };
-
-  const closeCreateRoomModal = () => {
-    setIsCreateRoomModalOpen(false);
-  };
-
+const NoRoomsView: FC<Props> = ({ openCreateRoomModal }) => {
   return (
     <div className="bg-white">
       <h3 className="text-xl text-[#41A080] font-bold mt-8 text-center">
@@ -34,10 +25,6 @@ const NoRoomsView = () => {
           Create room
         </button>
       </section>
-
-      <Modal isOpen={isCreateRoomModalOpen} close={closeCreateRoomModal}>
-        <CreateRoom close={closeCreateRoomModal} />
-      </Modal>
     </div>
   );
 };

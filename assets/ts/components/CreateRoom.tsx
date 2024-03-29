@@ -20,7 +20,6 @@ const CreateRoom: FC<Props> = ({ close }) => {
       })
       .receive("ok", (response) => {
         console.log(response);
-        alert(`${response?.name} room created`);
         close();
       })
       .receive("error", (error) => {
