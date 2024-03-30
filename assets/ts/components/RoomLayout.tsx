@@ -23,6 +23,10 @@ const RoomLayout = () => {
     setRooms([response, ...rooms]);
   });
 
+  roomChannel.on("update_rooms", (response: { rooms: RoomType[] }) => {
+    setRooms(response?.rooms ?? []);
+  });
+
   // synchronize the socket state.
   useEffect(() => {
     roomChannel.push("sync_rooms", { rooms: rooms });

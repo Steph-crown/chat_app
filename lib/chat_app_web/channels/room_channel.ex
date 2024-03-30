@@ -83,7 +83,7 @@ defmodule ChatAppWeb.RoomChannel do
   end
 
   @impl true
-  def handle_out("update_rooms", %{"rooms" => rooms}, socket) do
+  def handle_out("update_rooms", %{rooms: rooms}, socket) do
     rooms =
       Enum.map(rooms, fn room ->
         is_member = is_member_of_room?(socket, room["id"])
