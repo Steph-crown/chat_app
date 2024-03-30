@@ -2,6 +2,8 @@ defmodule ChatAppWeb.RoomChannel do
   use ChatAppWeb, :channel
   require Logger
 
+  intercept ["update_rooms", "new_room"]
+
   @impl true
   def join("room", _payload, socket) do
     {:ok, socket}
@@ -48,7 +50,7 @@ defmodule ChatAppWeb.RoomChannel do
         socket
       ) do
     socket = socket |> handle_join_room(room_id)
-    broadcast!(socket, "updated_rooms", %{rooms: socket.assigns.rooms})
+    broadcast!(socket, "update_rooms", %{rooms: socket.assigns.rooms})
 
     {:reply, {:ok, payload}, socket}
   end
@@ -69,5 +71,41 @@ defmodule ChatAppWeb.RoomChannel do
     }
 
     assign(socket, :memberships, [membership | memberships])
+  end
+
+  @impl true
+  def handle_out("new_room", room, socket) do
+    is_member = is_member_of_room?(socket, room["id"])
+    room = Map.put(room, "is_member", is_member)
+    push(socket, "new_room", room)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_out("update_rooms", %{"rooms" => rooms}, socket) do
+    rooms =
+      Enum.map(rooms, fn room ->
+        is_member = is_member_of_room?(socket, room["id"])
+        Map.put(room, "is_member", is_member)
+      end)
+
+    push(socket, "update_rooms", %{rooms: rooms})
+
+    {:noreply, socket}
+  end
+
+  defp is_member_of_room?(
+         %{
+           assigns: %{
+             memberships: memberships,
+             user_id: user_id
+           }
+         },
+         room_id
+       ) do
+    Enum.any?(memberships, fn membership ->
+      membership["room_id"] == room_id && membership["user_id"] == user_id
+    end)
   end
 end

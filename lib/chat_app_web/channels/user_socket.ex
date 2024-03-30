@@ -36,8 +36,7 @@ defmodule ChatAppWeb.UserSocket do
   @impl true
   def connect(
         %{
-          "user_id" => user_id,
-          "user_name" => user_name
+          "user_id" => user_id
         },
         socket,
         _connect_info
@@ -46,8 +45,7 @@ defmodule ChatAppWeb.UserSocket do
      socket
      |> assign(:rooms, [])
      |> assign(:memberships, [])
-     |> assign(:user_id, user_id)
-     |> assign(:user_name, user_name)}
+     |> assign(:user_id, user_id)}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

@@ -10,7 +10,6 @@ const socket = new Socket("/socket", {
   params: {
     token: window.userToken,
     user_id: window.userId,
-    user_name: window.userName,
   },
 });
 
@@ -64,7 +63,6 @@ export default socket;
 declare global {
   interface Window {
     userToken: string;
-    userName: string;
     userId: string;
   }
 }
