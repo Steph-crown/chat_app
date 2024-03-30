@@ -6,8 +6,12 @@ import { Socket } from "phoenix";
 
 // And connect to the path in "lib/chat_app_web/endpoint.ex". We pass the
 // token for authentication. Read below how it should be used.
-let socket = new Socket("/socket", {
-  params: { token: window.userToken },
+const socket = new Socket("/socket", {
+  params: {
+    token: window.userToken,
+    user_id: window.userId,
+    user_name: window.userName,
+  },
 });
 
 // When you connect, you'll often need to authenticate the client.
@@ -60,5 +64,7 @@ export default socket;
 declare global {
   interface Window {
     userToken: string;
+    userName: string;
+    userId: string;
   }
 }

@@ -34,8 +34,19 @@ defmodule ChatAppWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket |> assign(:rooms, [])}
+  def connect(
+        %{
+          "user_id" => user_id,
+          "user_name" => user_name
+        },
+        socket,
+        _connect_info
+      ) do
+    {:ok,
+     socket
+     |> assign(:rooms, [])
+     |> assign(:user_id, user_id)
+     |> assign(:user_name, user_name)}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
