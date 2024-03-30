@@ -27,7 +27,17 @@ const RoomsView: FC<Props> = ({ rooms, openCreateRoomModal }) => {
     );
   };
 
-  console.log({ therooms: rooms });
+  const getJoinedRooms = (rooms: RoomType[]) => {
+    return filterRoomsBySearch(rooms, roomSearchQuery).filter(
+      (room) => room.is_member
+    );
+  };
+
+  const getOtherRooms = (rooms: RoomType[]) => {
+    return filterRoomsBySearch(rooms, roomSearchQuery).filter(
+      (room) => !room.is_member
+    );
+  };
 
   return (
     <div className="flex divide-x-[#EBEBEB] divide-x-[1px]">
@@ -48,13 +58,25 @@ const RoomsView: FC<Props> = ({ rooms, openCreateRoomModal }) => {
           onChange={handleRoomSearchQueryChange}
         />
 
-        <div className="flex flex-col gap-y-2">
-          <p className="text-[#818181] text-xs font-medium">JOINED ROOMS</p>
+        {getJoinedRooms(rooms)?.length > 0 && (
+          <div className="flex flex-col gap-y-2">
+            <p className="text-[#818181] text-xs font-medium">JOINED ROOMS</p>
 
-          {filterRoomsBySearch(rooms, roomSearchQuery).map((room) => (
-            <RoomCard key={room.id} {...room} />
-          ))}
-        </div>
+            {getJoinedRooms(rooms).map((room) => (
+              <RoomCard key={room.id} {...room} />
+            ))}
+          </div>
+        )}
+
+        {getOtherRooms(rooms)?.length > 0 && (
+          <div className="flex flex-col gap-y-2 mt-4">
+            <p className="text-[#818181] text-xs font-medium">DISCOVER ROOMS</p>
+
+            {getOtherRooms(rooms).map((room) => (
+              <RoomCard key={room.id} {...room} />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="w-[56%] h-screen"></section>
