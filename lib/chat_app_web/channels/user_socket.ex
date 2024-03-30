@@ -45,6 +45,7 @@ defmodule ChatAppWeb.UserSocket do
     {:ok,
      socket
      |> assign(:rooms, [])
+     |> assign(:memberships, [])
      |> assign(:user_id, user_id)
      |> assign(:user_name, user_name)}
   end
