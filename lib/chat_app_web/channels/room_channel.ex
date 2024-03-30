@@ -24,4 +24,13 @@ defmodule ChatAppWeb.RoomChannel do
     IO.inspect([room | socket.assigns.rooms])
     {:reply, {:ok, payload}, assign(socket, :rooms, [room | socket.assigns.rooms])}
   end
+
+  @impl true
+  def handle_in(
+        "sync_rooms",
+        %{"rooms" => rooms} = payload,
+        socket
+      ) do
+    {:reply, {:ok, payload}, assign(socket, :rooms, rooms)}
+  end
 end
