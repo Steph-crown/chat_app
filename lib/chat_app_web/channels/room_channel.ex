@@ -79,6 +79,22 @@ defmodule ChatAppWeb.RoomChannel do
     end
   end
 
+  def handle_in(
+        "get_room_members",
+        %{"room_id" => room_id},
+        %{assigns: %{memberships: memberships}} = socket
+      ) do
+    members =
+      Enum.map(memberships, fn membership ->
+        if membership["room_id"] == room_id do
+          membership["user_id"]
+        end
+      end)
+      |> Enum.filter(&(&1 != nil))
+
+    {:reply, {:ok, members}, socket}
+  end
+
   defp handle_join_room(
          %{
            assigns: %{

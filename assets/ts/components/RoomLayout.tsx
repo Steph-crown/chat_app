@@ -10,6 +10,7 @@ import roomChannel from "../channels/room_channel";
 const RoomLayout = () => {
   const [rooms, setRooms] = useState<RoomType[]>([]);
   const [activeRoom, setActiveRoom] = useState<RoomType | null>(null);
+  const [activeRoomMembers, setActiveRoomMembers] = useState<string[]>([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
 
   const openCreateRoomModal = () => {
@@ -32,12 +33,27 @@ const RoomLayout = () => {
       });
   };
 
+  const getActiveRoomMembers = () => {
+    if (activeRoom) {
+      roomChannel
+        .push("get_room_members", { room_id: activeRoom?.id })
+        .receive("ok", (response) => {
+          setActiveRoomMembers(response);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getActiveRoomMembers();
+  }, [activeRoom]);
+
   roomChannel.on("new_room", (response: RoomType) => {
     setRooms([response, ...rooms]);
   });
 
   roomChannel.on("update_rooms", (response: { rooms: RoomType[] }) => {
     setRooms(response?.rooms ?? []);
+    getActiveRoomMembers();
   });
 
   roomChannel.on("update_active_room", (response: RoomType) => {
@@ -57,6 +73,7 @@ const RoomLayout = () => {
           activeRoom={activeRoom}
           openCreateRoomModal={openCreateRoomModal}
           handleSetActiveRoom={handleSetActiveRoom}
+          activeRoomMembers={activeRoomMembers}
         />
       ) : (
         <NoRoomsView openCreateRoomModal={openCreateRoomModal} />

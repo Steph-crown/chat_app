@@ -8,6 +8,7 @@ import { RoomType } from "../types";
 type Props = {
   rooms: RoomType[];
   activeRoom: RoomType | null;
+  activeRoomMembers: string[];
   handleSetActiveRoom: (roomId: number) => void;
   openCreateRoomModal: () => void;
 };
@@ -15,6 +16,7 @@ type Props = {
 const RoomsView: FC<Props> = ({
   rooms,
   activeRoom,
+  activeRoomMembers,
   handleSetActiveRoom,
   openCreateRoomModal,
 }) => {
@@ -110,7 +112,7 @@ const RoomsView: FC<Props> = ({
 
       {activeRoom ? (
         <section className="w-[22%] h-screen">
-          <RoomDirectory room={activeRoom} />
+          <RoomDirectory room={activeRoom} members={activeRoomMembers} />
         </section>
       ) : null}
     </div>
