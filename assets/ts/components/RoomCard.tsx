@@ -3,23 +3,15 @@ import React, { FC, useState } from "react";
 import JoinRoomPrompt from "./JoinRoomPrompt";
 import Modal from "./Modal";
 import { RoomType } from "../types";
+import { getDummyPhoto } from "../utils";
 
-type Props = RoomType;
-
-const displayPhotos = [
-  "avatar1.svg",
-  "avatar2.svg",
-  "avatar3.svg",
-  "avatar4.svg",
-  "avatar5.svg",
-  "avatar6.svg",
-];
+type Props = RoomType & {
+  handleSetActiveRoom: (roomId: number) => void;
+};
 
 const RoomCard: FC<Props> = (props) => {
-  const { id, name, is_member } = props;
+  const { id, name, is_member, handleSetActiveRoom } = props;
   const [isJoinPromptOpen, setIsJoinPromptOpen] = useState(false);
-  // get picture index using id to display a unique picture for each room.
-  const pictureIndex = id % displayPhotos.length;
 
   const openJoinPrompt = () => {
     setIsJoinPromptOpen(true);
@@ -31,7 +23,7 @@ const RoomCard: FC<Props> = (props) => {
 
   const handleSelectRoom = () => {
     if (is_member) {
-      // open the room.
+      handleSetActiveRoom(id);
     } else {
       openJoinPrompt();
     }
@@ -44,7 +36,7 @@ const RoomCard: FC<Props> = (props) => {
         onClick={handleSelectRoom}
       >
         <div className="flex gap-x-4 items-center">
-          <img src={`/images/${displayPhotos[pictureIndex]}`} alt="" />
+          <img src={`/images/${getDummyPhoto(id)}`} alt="" />
 
           <div>
             <p className="font-semibold text-sm">{name}</p>

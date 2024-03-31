@@ -45,7 +45,8 @@ defmodule ChatAppWeb.UserSocket do
      socket
      |> assign(:rooms, [])
      |> assign(:memberships, [])
-     |> assign(:user_id, user_id)}
+     |> assign(:user_id, user_id)
+     |> assign(:active_room_id, nil)}
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

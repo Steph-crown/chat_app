@@ -1,14 +1,23 @@
 import React, { FC, useState } from "react";
 
 import RoomCard from "./RoomCard";
+import RoomDirectory from "./RoomDirectory";
+import RoomMessages from "./RoomMessages";
 import { RoomType } from "../types";
 
 type Props = {
   rooms: RoomType[];
+  activeRoom: RoomType | null;
+  handleSetActiveRoom: (roomId: number) => void;
   openCreateRoomModal: () => void;
 };
 
-const RoomsView: FC<Props> = ({ rooms, openCreateRoomModal }) => {
+const RoomsView: FC<Props> = ({
+  rooms,
+  activeRoom,
+  handleSetActiveRoom,
+  openCreateRoomModal,
+}) => {
   const [roomSearchQuery, setRoomSearchQuery] = useState("");
 
   const handleRoomSearchQueryChange = (
@@ -63,7 +72,11 @@ const RoomsView: FC<Props> = ({ rooms, openCreateRoomModal }) => {
             <p className="text-[#818181] text-xs font-medium">JOINED ROOMS</p>
 
             {getJoinedRooms(rooms).map((room) => (
-              <RoomCard key={room.id} {...room} />
+              <RoomCard
+                key={room.id}
+                {...room}
+                handleSetActiveRoom={handleSetActiveRoom}
+              />
             ))}
           </div>
         )}
@@ -73,15 +86,33 @@ const RoomsView: FC<Props> = ({ rooms, openCreateRoomModal }) => {
             <p className="text-[#818181] text-xs font-medium">DISCOVER ROOMS</p>
 
             {getOtherRooms(rooms).map((room) => (
-              <RoomCard key={room.id} {...room} />
+              <RoomCard
+                key={room.id}
+                {...room}
+                handleSetActiveRoom={handleSetActiveRoom}
+              />
             ))}
           </div>
         )}
       </section>
 
-      <section className="w-[56%] h-screen"></section>
+      <section className={`${activeRoom ? "w-[56%]" : "w-[78%]"} h-screen`}>
+        {activeRoom ? (
+          <RoomMessages room={activeRoom!} />
+        ) : (
+          <div className="h-full flex items-center justify-center">
+            <p className="text-[#818181] text-sm ">
+              Select a room to start chatting
+            </p>
+          </div>
+        )}
+      </section>
 
-      <section className="w-[22%] h-screen"></section>
+      {activeRoom ? (
+        <section className="w-[22%] h-screen">
+          <RoomDirectory room={activeRoom} />
+        </section>
+      ) : null}
     </div>
   );
 };

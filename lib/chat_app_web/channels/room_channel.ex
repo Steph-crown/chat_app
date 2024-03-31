@@ -26,6 +26,7 @@ defmodule ChatAppWeb.RoomChannel do
       socket
       |> assign(:rooms, [room | rooms])
       |> handle_join_room(room["id"])
+      |> handle_set_active_room(room)
 
     broadcast!(socket, "new_room", room)
     Logger.info("#{name} room created")
@@ -49,10 +50,33 @@ defmodule ChatAppWeb.RoomChannel do
         } = payload,
         socket
       ) do
-    socket = socket |> handle_join_room(room_id)
+    room = get_room_by_id(socket, room_id)
+
+    socket =
+      socket
+      |> handle_join_room(room_id)
+      |> handle_set_active_room(room)
+
     broadcast!(socket, "update_rooms", %{rooms: socket.assigns.rooms})
 
     {:reply, {:ok, payload}, socket}
+  end
+
+  def handle_in(
+        "set_active_room",
+        %{"room_id" => room_id},
+        socket
+      ) do
+    room = get_room_by_id(socket, room_id)
+
+    cond do
+      %{"is_member" => true} = room ->
+        socket = handle_set_active_room(socket, room)
+        {:reply, {:ok, room}, socket}
+
+      true ->
+        {:reply, {:error, "You are not a member of this room"}, socket}
+    end
   end
 
   defp handle_join_room(
@@ -107,5 +131,18 @@ defmodule ChatAppWeb.RoomChannel do
     Enum.any?(memberships, fn membership ->
       membership["room_id"] == room_id && membership["user_id"] == user_id
     end)
+  end
+
+  defp handle_set_active_room(socket, room) do
+    # push/3 only sends event to the calling client, broadcast! sends to all clients connected to topic
+    push(socket, "update_active_room", room)
+    assign(socket, :active_room_id, room["id"])
+  end
+
+  defp get_room_by_id(
+         %{assigns: %{rooms: rooms}},
+         room_id
+       ) do
+    Enum.find(rooms, fn room -> room["id"] == room_id end)
   end
 end

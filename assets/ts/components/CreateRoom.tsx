@@ -19,7 +19,6 @@ const CreateRoom: FC<Props> = ({ close }) => {
         description: roomDescription,
       })
       .receive("ok", (response) => {
-        console.log(response);
         close();
       })
       .receive("error", (error) => {
